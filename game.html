@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial scale=1.0">
+    <title>Sacrificial Lamb</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="background-image: url('pictures/background.webp');">
+    <div id="winner-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <h2>Congratulations! You have beat the game!</h2>
+            <br>
+            <button id="next-question-btn" class="vowelBtn" onclick="NewGame(), TogglePopup('winner-popup', false)">Restart Game</button>
+        </div>
+    </div>
+    <div id="correct-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <h2>You guessed it correctly!</h2>
+            <br>
+            <button id="next-question-btn" class="vowelBtn" onclick="NextQuestion()">Next Question</button>
+        </div>
+    </div>
+    <div id="lose-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <img id="hangman-gameover" style="width: 350px;" src="pictures/hangman_state_03.png" alt="hangman-img">
+            <br>
+            <h2>You lost! Try again?</h2>
+            <br>
+            <button id="restart-btn" class="vowelBtn" onclick="NewGame()">Restart</button>
+        </div>
+    </div>
+    <div id="clue-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <h2>PICK A CLUE:</h2>
+            <br>
+            <button id="vowel-btn" class="vowelBtn" onclick="GetClue(0), TogglePopup('clue-popup', false)" >Vowel</button> <!-- in adjust -->
+            <br>
+            <button id="consonant-btn" class="consonantBtn" onclick="GetClue(1), TogglePopup('clue-popup', false)">Consonant</button><!-- in adjust -->
+            <br>
+            <button id="quit-btn" class="quitBtn" onclick="TogglePopup('clue-popup', false)">Close</button>
+        </div>
+    </div>
+    <div id="debug-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <h2>Debug Mode</h2>
+            <br>
+            Total Points:
+            <br>
+            <button id="restart-btn" class="popupBtn" onclick="IncreaseTotalPoints()" >Increase Total Points +25</button>
+            <button id="restart-btn" class="popupBtn" onclick="DecreaseTotalPoints()" >Decrease Total Points -25</button> 
+            <br>
+            Available Clues:
+            <br>
+            <button id="restart-btn" class="popupBtn" onclick="IncreaseClue()" >Increase Available Clues +1</button>
+            <button id="restart-btn" class="popupBtn" onclick="DecreaseClue()" >Decrease Available Clues -1</button> 
+            <br>
+            <button id="restart-btn" class="popupBtn" onclick="NewGame()" >Restart Game</button> 
+            <button id="restart-btn" class="popupBtn" onclick="NextQuestion()" >Skip Question</button> 
+            <br>
+            <button id="quit-btn" class="quitBtn" onclick="TogglePopup('debug-popup', false)">Close</button>
+        </div>
+    </div>
+    <div id="credits-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+			<h1>CREDITS</h1>
+            <br>
+            <hr>
+			<br>
+            <div class="credit-names">
+                <h3>Farala, David Patrick R.</h3>
+                <br>
+                <h3>Manalang, Jeremy Christian J.</h3>
+                <br>
+                <h3>Mariano, Elijah Jesse M.</h3>
+                <br>
+                <h3>Ratilla, Carl Johnrey C.</h3>
+                <br>
+                <h3>Wijangco, Vryan James V.</h3>
+            </div>
+			<button id="quit-btn" class="quitBtn" onclick="TogglePopup('credits-popup', false)">Close</button>
+        </div>
+    </div>
+    <div id="clue-prompt-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <h2>Need 25 pts!</h2>
+            <br>
+            <button id="restart-btn" class="vowelBtn" onclick="TogglePopup('clue-prompt-popup', false)">OK!</button>
+        </div>
+    </div>
+    <div id="noclue-prompt-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <h2>No more clues left!</h2>
+            <br>
+            <button id="restart-btn" class="vowelBtn" onclick="TogglePopup('noclue-prompt-popup', false)">OK!</button>
+        </div>
+    </div>
+    <div id="settings-popup" class="popup-container" style="display: none;">
+        <div class="popup">
+            <button class="vowelBtn" onclick="window.location.href = 'index.html'">Home</button>
+            <button class="vowelBtn" onclick="TogglePopup('credits-popup', true), TogglePopup('settings-popup', false)">Credits</button>
+            <button class="vowelBtn" onclick="TogglePopup('debug-popup', true), TogglePopup('settings-popup', false)">Debug Mode</button>
+            <button class="quitBtn" onclick="TogglePopup('settings-popup', false)" class="close-button">Close</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="game-box">
+            <!-- Game Title-->
+            <img id="hangman-img" src="pictures/hangman_state_00.png" alt="hangman-img">
+        </div>
+        <div class="game-frame">  
+            <div class="settings">
+                <button id="settings-button" onclick="TogglePopup('settings-popup', true)" class="settingsBtn" style="float:right;">
+                    <img src="pictures/gear.png" style="width: 50px;">
+                </button>
+            </div>
+            <h4 class="guesses-count">
+                <b id="difficulty-txt" style="font-size: 30px;">Easy</b>
+            </h4>
+            <br>
+            <div>
+                <h4>
+                    <b id="level-txt">[0/10] </b><b id="question-txt">Question</b>
+                </h4>
+            </div>
+            <br><br><br>
+            <ul id="word-display-container" class="word-display">
+            </ul>
+            <h4 class="guesses-count">
+                Total Points:
+                <b id="total-points-txt">0 pt/s.</b>
+                |
+                Available Clues:
+                <b id="available-clues-txt">0 / 0</b>
+                |
+                Incorrect Guesses:
+                <b id="incorrect-guesses-txt">0 / 0</b>
+            </h4>
+            <br>
+            <center>
+                <button id="clue-btn" class="clueBtn" onclick="OpenClue()">
+                    <img src="pictures/lightbulb-on.png">
+                </button>
+              </center>
+              
+            <div class="keyboard">
+                <div class="top-row">
+                    <button id="Q" onclick="EnterLetter('Q')">Q</button>
+                    <button id="W" onclick="EnterLetter('W')">W</button>
+                    <button id="E" onclick="EnterLetter('E')">E</button>
+                    <button id="R" onclick="EnterLetter('R')">R</button>
+                    <button id="T" onclick="EnterLetter('T')">T</button>
+                    <button id="Y" onclick="EnterLetter('Y')">Y</button>
+                    <button id="U" onclick="EnterLetter('U')">U</button>
+                    <button id="I" onclick="EnterLetter('I')">I</button>
+                    <button id="O" onclick="EnterLetter('O')">O</button>
+                    <button id="P" onclick="EnterLetter('P')">P</button>
+                </div>
+                <div class="middle-row">
+                    <button id="A" onclick="EnterLetter('A')">A</button>
+                    <button id="S" onclick="EnterLetter('S')">S</button>
+                    <button id="D" onclick="EnterLetter('D')">D</button>
+                    <button id="F" onclick="EnterLetter('F')">F</button>
+                    <button id="G" onclick="EnterLetter('G')">G</button>
+                    <button id="H" onclick="EnterLetter('H')">H</button>
+                    <button id="J" onclick="EnterLetter('J')">J</button>
+                    <button id="K" onclick="EnterLetter('K')">K</button>
+                    <button id="L" onclick="EnterLetter('L')">L</button>
+                </div>
+                <div class="bottom-row">
+                    <button id="Z" onclick="EnterLetter('Z')">Z</button>
+                    <button id="X" onclick="EnterLetter('X')">X</button>
+                    <button id="C" onclick="EnterLetter('C')">C</button>
+                    <button id="V" onclick="EnterLetter('V')">V</button>
+                    <button id="B" onclick="EnterLetter('B')">B</button>
+                    <button id="N" onclick="EnterLetter('N')">N</button>
+                    <button id="M" onclick="EnterLetter('M')">M</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="myscript.js"></script>
+</body>
+</html>
