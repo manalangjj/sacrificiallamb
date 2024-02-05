@@ -52,6 +52,8 @@ let hasWon = false;
 let hasLost = false;
 let hasCompletedGame = false;
 
+let whitespacesList = [];
+
 const VOWELS_LIST = 
 [
     'A', 'E', 'I', 'O', 'U'
@@ -150,10 +152,35 @@ function NewGame()
     TogglePopup('clue-popup', false);
     TogglePopup('debug-popup', false);
 
+    // Delete all whitespace elements.
+    if (whitespacesList.length > 0)
+    {
+        for (let i = 0; i < whitespacesList.length; i++)
+        {
+            console.log(whitespacesList[i]);
+            whitespacesList[i].remove();
+        }
+    }
+
+    whitespacesList = [];
+
     // Reset all answer button states.
     for (let i = 0; i < answerBtnList.length; i++)
     {
         answerBtnList[i].setAttribute("class", "enabled");
+    }
+
+    // Remove all whitespaces
+    for (let i = 0; i < currentAnswer.length; i++)
+    {
+        if (currentAnswer[i] == "|")
+        {
+            currentAnswer.removeAt(i);
+        }
+        else
+        {
+            continue;
+        }
     }
 
     // Reset letters.
@@ -322,6 +349,18 @@ function NextQuestion()
     TogglePopup('lose-popup', false);
     TogglePopup('clue-popup', false);
 
+    // Delete all whitespace elements.
+    if (whitespacesList.length > 0)
+    {
+        for (let i = 0; i < whitespacesList.length; i++)
+        {
+            console.log(whitespacesList[i]);
+            whitespacesList[i].remove();
+        }
+    }
+
+    whitespacesList = [];
+
     // Reset all answer button states.
     for (let i = 0; i < answerBtnList.length; i++)
     {
@@ -382,6 +421,8 @@ function CreateLetter(letter)
         newLetter.setAttribute("class", "whitespace");
 
         wordDisplayContainer.appendChild(newLetter);
+
+        whitespacesList.push(newLetter);
     }
 }
 
